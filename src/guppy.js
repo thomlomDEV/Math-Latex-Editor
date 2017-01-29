@@ -98,7 +98,6 @@ Guppy.prototype.set_content = function(xml_data){
     this.checkpoint();
 }
 
-
 Guppy.instances = {};
 Guppy.ready = false;
 
@@ -262,9 +261,7 @@ Guppy.manual_render = function(base,t,n,r){
 	    else if(nn.nodeType == 1){
 		if(nn.hasAttribute("d")){
 		    var dim = parseInt(nn.getAttribute("d"));
-		    console.log(nn);
 		    var joiner = function(d,l){
-			console.log("DL",d,l);
 			if(d > 1) for(var k = 0; k < l.length; k++) l[k] = joiner(d-1,l[k]);
 			return l.join(nn.getAttribute('sep'+d));
 		    }
@@ -273,16 +270,13 @@ Guppy.manual_render = function(base,t,n,r){
 		else ans += cs[parseInt(nn.getAttribute("ref"))];
 	    }
 	}
-	console.log(ans);
     }
     else if(n.nodeName == "l"){
 	ans = [];
 	var i = 0;
 	for(var nn = n.firstChild; nn != null; nn = nn.nextSibling){
-	    console.log(nn);
 	    ans[i++] = Guppy.manual_render(base,t,nn,r);
 	}
-	console.log("CS",ans);
     }
     else if(n.nodeName == "c" || n.nodeName == "m"){
 	for(var nn = n.firstChild; nn != null; nn = nn.nextSibling)
@@ -868,7 +862,6 @@ Guppy.prototype.symbol_to_node = function(sym_name, content){
 	    for(var i = 0; i < out.length; i++){
 		m = out[i].match(/^\{\$([0-9]+)((?:\{[^}]\})*)\}$/);
 		if(m){
-		    console.log("O",out);
 		    out[i] = {'ref':parseInt(m[1])};
 		    if(m[2].length > 0){
 			mm = m[2].match(/\{[^}]*\}/g);
@@ -886,7 +879,6 @@ Guppy.prototype.symbol_to_node = function(sym_name, content){
 		b.appendChild(nt);
 	    }
 	    else{
-		console.log(out[i]);
 		var nt = this.base.createElement("r");
 		for(var attr in out[i]){
 		    nt.setAttribute(attr,out[i][attr]);
@@ -901,7 +893,6 @@ Guppy.prototype.symbol_to_node = function(sym_name, content){
 	}
 	f.appendChild(b);
     }
-    console.log("L",lists);
     // Now make the c nodes for storing the content
     for(var i = 0; i < refs_count; i++){
 	var nc = this.base.createElement("c");
@@ -938,7 +929,6 @@ Guppy.prototype.is_text = function(nn){
 Guppy.prototype.is_small = function(nn){
     var n = nn.parentNode;
     while(n != null && n.nodeName != 'm'){
-	console.log("IS",n);
 	if(n.getAttribute("size") == "s"){
 	    return true;
 	}
@@ -1150,7 +1140,6 @@ Guppy.prototype.insert_string = function(s){
 	this.sel_clear();
     }
     Guppy.log(3,"ASD",this.caret,this.current,this.current.firstChild.nodeValue,s);
-    console.log(3,"ASD",this.caret,this.current,this.current.firstChild.nodeValue,s);
     this.current.firstChild.nodeValue = this.current.firstChild.nodeValue.splice(this.caret,s)
     this.caret += s.length;
     this.checkpoint();
@@ -1177,7 +1166,7 @@ Guppy.prototype.activate = function(){
     this.editor.className = this.editor.className.replace(new RegExp('(\\s|^)guppy_inactive(\\s|$)'),' guppy_active ');
     this.editor.focus();
     if(this.ready){
-	this.render();
+	this.render(true);
     }
 }
 
